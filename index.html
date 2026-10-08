@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Light - 블랙리스트 신고</title>
+    <meta name="description" content="Team Light 블랙리스트 신고 폼. 디스코드 로그인 후 신고서를 제출해주세요.">
+    <link rel="icon" type="image/png" href="https://teamlight.pe.kr/static/assets/team-light-logo.png">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <style>
+        /* ── Team Light Design System (mirrored) ── */
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800;900&display=swap');
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            color-scheme: dark;
+            --bg:           #0d0514;
+            --bg-2:         #130820;
+            --surface:      rgba(255,255,255,0.05);
+            --surface-2:    rgba(255,255,255,0.09);
+            --surface-3:    rgba(255,255,255,0.14);
+            --surface-hover:rgba(255,255,255,0.12);
+            --fg:           #f5e9ff;
+            --fg-muted:     rgba(230,210,255,0.70);
+            --fg-soft:      rgba(210,185,255,0.45);
+            --accent:       #c026d3;
+            --accent-2:     #e879f9;
+            --accent-alt:   #7c3aed;
+            --accent-alt2:  #a78bfa;
+            --accent-glow:  rgba(192,38,211,0.30);
+            --border:       rgba(232,121,249,0.14);
+            --border-2:     rgba(232,121,249,0.26);
+            --border-strong:rgba(232,121,249,0.42);
+            --danger:       #f43f5e;
+            --success:      #34d399;
+            --warn:         #fbbf24;
+            --shadow-sm:    0 2px 10px rgba(90,0,120,0.35);
+            --shadow-md:    0 8px 32px rgba(90,0,120,0.45);
+            --shadow-lg:    0 20px 64px rgba(90,0,120,0.55);
+            --radius-sm:    6px;
+            --radius:       10px;
+            --radius-lg:    16px;
+            --radius-xl:    22px;
+            --radius-full:  9999px;
+            --max-w:        680px;
+            --ease:         cubic-bezier(0.22, 1, 0.36, 1);
+            --fast:         0.16s ease;
+            --base:         0.28s var(--ease);
+            --grad-bg:
+                radial-gradient(ellipse 120% 80% at 50% 0%,   #4a0060 0%,  transparent 55%),
+                radial-gradient(ellipse 100% 70% at 100% 50%,  #7c0060 0%,  transparent 50%),
+                radial-gradient(ellipse 100% 70% at 0%   80%,  #2d0070 0%,  transparent 50%),
+                linear-gradient(160deg, #1a0030 0%, #3b0060 30%, #5c0080 55%, #7c1060 80%, #4a0050 100%);
+        }
+
+        html { min-height: 100%; background: var(--bg); scroll-behavior: smooth; }
+        body {
+            min-height: 100vh;
+            overflow-x: hidden;
+            color: var(--fg);
+            font-family: "Noto Sans KR", "Pretendard Variable", "Pretendard", "Segoe UI", system-ui, sans-serif;
+            font-size: 15px;
+            line-height: 1.7;
+            background: var(--bg);
+        }
+        body::before {
+            position: fixed; inset: 0; z-index: 0;
+            pointer-events: none; content: "";
+            background: var(--grad-bg);
+        }
+        a { color: inherit; text-decoration: none; }
+        button, input, textarea, select { font: inherit; }
+        button { cursor: pointer; border: none; background: none; }
+        :focus-visible { outline: 2px solid var(--accent-2); outline-offset: 3px; border-radius: var(--radius-sm); }
+
+        /* ── Layout ── */
+        .page-shell {
+            position: relative; z-index: 2;
+            min-height: 100vh;
+            display: flex; flex-direction: column;
+            align-items: center;
+            padding: 80px 20px 60px;
+        }
+
+        /* ── Header strip ── */
+        .page-header {
+            width: 100%; max-width: var(--max-w);
+            margin-bottom: 40px;
+        }
+        .page-header-inner {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 8px 8px 8px 16px;
+            border: 1px solid var(--border-2);
+            border-radius: var(--radius-full);
+            background: var(--surface-2);
+            backdrop-filter: blur(24px) saturate(1.5);
+            box-shadow: var(--shadow-md);
+        }
+        .brand-link {
+            display: inline-flex; align-items: center; gap: 10px;
+            color: var(--fg); font-weight: 800; font-size: 13px;
+            letter-spacing: 0.04em;
+        }
+        .brand-mark {
+            display: flex; align-items: center; justify-content: center;
+            width: 32px; height: 32px; border-radius: 50%; overflow: hidden;
+            border: 1px solid var(--border);
+            background: linear-gradient(135deg, rgba(192,38,211,0.3), rgba(124,58,237,0.3));
+            flex-shrink: 0; position: relative;
+        }
+        .brand-fallback {
+            color: var(--accent-2); font-size: 10px; font-weight: 900;
+            position: absolute; inset: 0;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .brand-logo { width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; border-radius: 50%; z-index: 1; }
+        .header-nav-link {
+            display: inline-flex; align-items: center; min-height: 32px; padding: 0 14px;
+            border: 1px solid var(--border); border-radius: var(--radius-full);
+            color: var(--fg-muted); font-size: 12px; font-weight: 700;
+            transition: color var(--fast), background var(--fast);
+        }
+        .header-nav-link:hover { color: var(--fg); background: var(--surface-hover); border-color: var(--border-2); }
+
+        /* ── Card container ── */
+        .form-card {
+            width: 100%; max-width: var(--max-w);
+            border: 1px solid var(--border-2);
+            border-radius: var(--radius-xl);
+            background: var(--surface);
+            backdrop-filter: blur(20px);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+        }
+
+        .form-card-header {
+            padding: 32px 36px 28px;
+            border-bottom: 1px solid var(--border);
+            background: linear-gradient(180deg, rgba(192,38,211,0.06), transparent);
+        }
+        .eyebrow {
+            display: inline-flex; align-items: center; gap: 6px;
+            font-size: 11px; font-weight: 800; letter-spacing: 0.1em;
+            text-transform: uppercase; color: var(--accent-2);
+            margin-bottom: 10px;
+        }
+        .eyebrow::before { content: ""; display: block; width: 20px; height: 2px; background: var(--accent-2); border-radius: 2px; }
+        .form-title { font-size: 24px; font-weight: 900; color: var(--fg); line-height: 1.3; margin-bottom: 8px; }
+        .form-subtitle { color: var(--fg-muted); font-size: 14px; }
+
+        .form-body { padding: 32px 36px; }
+
+        /* ── Login section ── */
+        .login-section {
+            display: flex; flex-direction: column; align-items: center;
+            padding: 40px 20px;
+            text-align: center;
+            gap: 20px;
+        }
+        .login-section.hidden { display: none; }
+        .login-icon {
+            width: 72px; height: 72px; border-radius: 50%;
+            background: linear-gradient(135deg, rgba(192,38,211,0.2), rgba(124,58,237,0.2));
+            border: 1px solid var(--border-2);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 32px;
+        }
+        .login-title { font-size: 18px; font-weight: 800; color: var(--fg); }
+        .login-desc { font-size: 14px; color: var(--fg-muted); max-width: 380px; line-height: 1.6; }
+
+        .btn-discord {
+            display: inline-flex; align-items: center; gap: 10px;
+            padding: 12px 28px;
+            border-radius: var(--radius-full);
+            background: #5865F2;
+            color: #fff; font-size: 14px; font-weight: 800;
+            letter-spacing: 0.02em;
+            box-shadow: 0 4px 20px rgba(88,101,242,0.40);
+            transition: background var(--fast), transform var(--fast), box-shadow var(--fast);
+        }
+        .btn-discord:hover { background: #4752c4; transform: translateY(-2px); box-shadow: 0 8px 28px rgba(88,101,242,0.50); }
+        .btn-discord svg { width: 20px; height: 20px; flex-shrink: 0; }
+
+        /* ── User badge (after login) ── */
+        .user-badge {
+            display: none;
+            align-items: center; gap: 12px;
+            padding: 12px 16px;
+            border: 1px solid var(--border-2);
+            border-radius: var(--radius-lg);
+            background: rgba(192,38,211,0.06);
+            margin-bottom: 28px;
+        }
+        .user-badge.visible { display: flex; }
+        .user-avatar {
+            width: 40px; height: 40px; border-radius: 50%;
+            border: 2px solid var(--border-2);
+            object-fit: cover; flex-shrink: 0;
+        }
+        .user-avatar-placeholder {
+            width: 40px; height: 40px; border-radius: 50%;
+            border: 2px solid var(--border-2);
+            background: linear-gradient(135deg, rgba(192,38,211,0.3), rgba(124,58,237,0.3));
+            display: flex; align-items: center; justify-content: center;
+            color: var(--accent-2); font-size: 16px; font-weight: 900;
+            flex-shrink: 0;
+        }
+        .user-info { flex: 1; min-width: 0; }
+        .user-name { font-size: 14px; font-weight: 800; color: var(--fg); }
+        .user-id { font-size: 12px; color: var(--fg-soft); font-family: monospace; }
+        .user-badge-tag {
+            font-size: 11px; font-weight: 800; letter-spacing: 0.04em;
+            padding: 3px 10px; border-radius: var(--radius-full);
+            background: rgba(52,211,153,0.12); color: var(--success);
+            border: 1px solid rgba(52,211,153,0.25);
+        }
+
+        /* ── Form ── */
+        .report-form { display: none; flex-direction: column; gap: 24px; }
+        .report-form.visible { display: flex; }
+
+        .form-group { display: flex; flex-direction: column; gap: 8px; }
+        .form-label {
+            font-size: 13px; font-weight: 800; color: var(--fg);
+            display: flex; align-items: center; gap: 6px;
+        }
+        .form-label .required {
+            font-size: 10px; padding: 2px 7px;
+            border-radius: var(--radius-full);
+            background: rgba(244,63,94,0.12); color: var(--danger);
+            border: 1px solid rgba(244,63,94,0.25);
+            letter-spacing: 0.04em;
+        }
+        .form-label .help-link {
+            margin-left: auto;
+            font-size: 11px; font-weight: 700;
+            color: var(--accent-2);
+            opacity: 0.8;
+            transition: opacity var(--fast);
+            display: inline-flex; align-items: center; gap: 3px;
+        }
+        .form-label .help-link:hover { opacity: 1; }
+
+        .form-input, .form-textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--border-2);
+            border-radius: var(--radius);
+            background: rgba(255,255,255,0.04);
+            color: var(--fg);
+            font-size: 14px;
+            transition: border-color var(--fast), background var(--fast), box-shadow var(--fast);
+        }
+        .form-input::placeholder, .form-textarea::placeholder { color: var(--fg-soft); }
+        .form-input:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--border-strong);
+            background: rgba(255,255,255,0.07);
+            box-shadow: 0 0 0 3px rgba(192,38,211,0.12);
+        }
+        .form-input.error { border-color: var(--danger); box-shadow: 0 0 0 3px rgba(244,63,94,0.10); }
+        .form-hint { font-size: 12px; color: var(--fg-soft); }
+        .form-error { font-size: 12px; color: var(--danger); display: none; }
+        .form-error.visible { display: block; }
+
+        /* ── Select Dropdown Dark Styling ── */
+        select.form-input {
+            background-color: #160a24;
+            color: #ffffff;
+            cursor: pointer;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23e879f9' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            background-size: 16px;
+            padding-right: 44px;
+        }
+        select.form-input:focus {
+            background-color: #1d0e30;
+            color: #ffffff;
+        }
+        select.form-input option {
+            background-color: #12071e !important;
+            color: #ffffff !important;
+            padding: 12px 16px;
+            font-size: 14px;
+        }
+        select.form-input option:disabled {
+            color: rgba(210, 185, 255, 0.45) !important;
+        }
+        select.form-input option:checked {
+            background-color: #3b0060 !important;
+            color: #e879f9 !important;
+        }
+
+        .form-textarea { resize: vertical; min-height: 140px; line-height: 1.6; }
+
+        .char-counter {
+            display: flex; justify-content: flex-end;
+            font-size: 12px; color: var(--fg-soft);
+            transition: color var(--fast);
+        }
+        .char-counter.warn { color: var(--warn); }
+        .char-counter.danger { color: var(--danger); }
+
+        /* ── Image upload ── */
+        .upload-zone {
+            border: 2px dashed var(--border-2);
+            border-radius: var(--radius-lg);
+            padding: 28px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color var(--fast), background var(--fast);
+            position: relative;
+        }
+        .upload-zone:hover, .upload-zone.drag-over {
+            border-color: var(--accent-2);
+            background: rgba(192,38,211,0.05);
+        }
+        .upload-zone input[type="file"] {
+            position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
+        }
+        .upload-icon { font-size: 32px; margin-bottom: 10px; }
+        .upload-title { font-size: 14px; font-weight: 800; color: var(--fg); margin-bottom: 4px; }
+        .upload-desc { font-size: 12px; color: var(--fg-muted); }
+        .upload-limit { font-size: 11px; color: var(--fg-soft); margin-top: 6px; }
+
+        .image-preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 10px;
+            margin-top: 12px;
+        }
+        .preview-item {
+            position: relative;
+            border-radius: var(--radius);
+            overflow: hidden;
+            border: 1px solid var(--border);
+            aspect-ratio: 1;
+            background: var(--surface-2);
+        }
+        .preview-item img {
+            width: 100%; height: 100%; object-fit: cover;
+        }
+        .preview-remove {
+            position: absolute; top: 4px; right: 4px;
+            width: 22px; height: 22px;
+            border-radius: 50%;
+            background: rgba(0,0,0,0.75);
+            color: #fff;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 12px;
+            cursor: pointer;
+            transition: background var(--fast);
+        }
+        .preview-remove:hover { background: var(--danger); }
+        .preview-name {
+            position: absolute; bottom: 0; left: 0; right: 0;
+            background: rgba(0,0,0,0.65);
+            font-size: 9px; color: #fff;
+            padding: 3px 5px;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+
+        /* ── Agreements ── */
+        .agree-section {
+            padding: 20px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            background: rgba(255,255,255,0.025);
+            display: flex; flex-direction: column; gap: 14px;
+        }
+        .agree-item {
+            display: flex; align-items: flex-start; gap: 12px;
+            cursor: pointer;
+        }
+        .agree-checkbox {
+            width: 18px; height: 18px; flex-shrink: 0;
+            border: 2px solid var(--border-2);
+            border-radius: 4px;
+            background: var(--surface);
+            appearance: none; -webkit-appearance: none;
+            cursor: pointer;
+            margin-top: 2px;
+            transition: border-color var(--fast), background var(--fast);
+            position: relative;
+        }
+        .agree-checkbox:checked {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+        .agree-checkbox:checked::after {
+            content: "";
+            position: absolute; inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2 6l3 3 5-5' stroke='white' stroke-width='1.8' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+            background-size: 12px; background-position: center; background-repeat: no-repeat;
+        }
+        .agree-text { font-size: 13px; color: var(--fg-muted); line-height: 1.5; }
+        .agree-text a { color: var(--accent-2); border-bottom: 1px solid transparent; transition: border-color var(--fast); }
+        .agree-text a:hover { border-color: var(--accent-2); }
+
+        /* ── Submit button ── */
+        .submit-section { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+        .btn-submit {
+            width: 100%;
+            padding: 15px 32px;
+            border-radius: var(--radius-full);
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-alt) 100%);
+            color: #fff; font-size: 15px; font-weight: 900;
+            letter-spacing: 0.04em;
+            box-shadow: 0 4px 24px rgba(192,38,211,0.35), inset 0 1px 0 rgba(255,255,255,0.15);
+            transition: transform var(--fast), box-shadow var(--fast), opacity var(--fast);
+            position: relative; overflow: hidden;
+        }
+        .btn-submit::before {
+            content: ""; position: absolute; inset: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.08), transparent);
+            opacity: 0; transition: opacity var(--fast);
+        }
+        .btn-submit:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(192,38,211,0.50); }
+        .btn-submit:hover::before { opacity: 1; }
+        .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        .btn-submit.loading { pointer-events: none; }
+        .btn-submit .spinner {
+            display: none; width: 18px; height: 18px;
+            border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff;
+            border-radius: 50%; animation: spin 0.7s linear infinite;
+        }
+        .btn-submit.loading .spinner { display: inline-block; }
+        .btn-submit.loading .btn-text { display: none; }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ── Blacklist page mention ── */
+        .bl-mention {
+            display: flex; align-items: center; gap: 12px;
+            padding: 14px 18px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            background: rgba(255,255,255,0.025);
+            font-size: 13px; color: var(--fg-muted);
+            transition: border-color var(--fast), background var(--fast);
+        }
+        .bl-mention:hover { border-color: var(--border-2); background: var(--surface-2); }
+        .bl-mention-icon { font-size: 20px; flex-shrink: 0; }
+        .bl-mention a { color: var(--accent-2); font-weight: 700; }
+
+        /* ── Divider ── */
+        .form-divider {
+            height: 1px; background: var(--border); border: none; margin: 4px 0;
+        }
+
+        /* ── Success state ── */
+        .success-state {
+            display: none; flex-direction: column; align-items: center;
+            padding: 60px 20px; text-align: center; gap: 16px;
+        }
+        .success-state.visible { display: flex; }
+        .success-icon { font-size: 56px; }
+        .success-title { font-size: 22px; font-weight: 900; color: var(--fg); }
+        .success-desc { font-size: 14px; color: var(--fg-muted); max-width: 360px; line-height: 1.6; }
+        .success-ticket {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 8px 16px;
+            border: 1px solid var(--border-2);
+            border-radius: var(--radius-full);
+            background: rgba(52,211,153,0.08);
+            color: var(--success); font-size: 12px; font-weight: 800; font-family: monospace;
+        }
+
+        /* ── Error toast ── */
+        .toast {
+            position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px);
+            padding: 12px 22px;
+            border-radius: var(--radius-full);
+            background: rgba(30,0,50,0.95);
+            border: 1px solid var(--border-2);
+            box-shadow: var(--shadow-lg);
+            backdrop-filter: blur(20px);
+            color: var(--fg); font-size: 13px; font-weight: 700;
+            z-index: 9999;
+            transition: transform 0.3s var(--ease), opacity 0.3s ease;
+            opacity: 0; white-space: nowrap;
+        }
+        .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+        .toast.error { border-color: rgba(244,63,94,0.4); color: #fda4af; }
+        .toast.success-toast { border-color: rgba(52,211,153,0.35); color: var(--success); }
+
+        /* ── Footer ── */
+        .page-footer {
+            margin-top: 32px;
+            text-align: center;
+            font-size: 12px; color: var(--fg-soft);
+        }
+        .page-footer a { color: var(--fg-muted); transition: color var(--fast); }
+        .page-footer a:hover { color: var(--fg); }
+
+        /* ── Responsive ── */
+        @media (max-width: 520px) {
+            .form-card-header, .form-body { padding: 24px 20px; }
+            .form-title { font-size: 20px; }
+            .page-shell { padding: 60px 12px 40px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-shell">
+        <!-- Header -->
+        <header class="page-header">
+            <div class="page-header-inner">
+                <a href="https://teamlight.pe.kr/index.html" class="brand-link">
+                    <span class="brand-mark" aria-hidden="true">
+                        <span class="brand-fallback">TL</span>
+                        <img class="brand-logo" src="https://teamlight.pe.kr/static/assets/team-light-logo.png" alt=""
+                             onload="this.previousElementSibling.style.display='none'"
+                             onerror="this.style.display='none'">
+                    </span>
+                    <strong>TEAM LIGHT</strong>
+                </a>
+                <a href="https://teamlight.pe.kr/blacklist.html" class="header-nav-link">블랙리스트 채점 기준</a>
+            </div>
+        </header>
+
+        <!-- Main Card -->
+        <main>
+            <div class="form-card" role="main">
+                <!-- Card Header -->
+                <div class="form-card-header">
+                    <div class="eyebrow">Blacklist Report</div>
+                    <h1 class="form-title">블랙리스트 신고</h1>
+                    <p class="form-subtitle">디스코드 계정으로 로그인 후 신고서를 제출해주세요. 허위 신고 시 제재를 받을 수 있습니다.</p>
+                </div>
+
+                <!-- Card Body -->
+                <div class="form-body">
+
+                    <!-- Login Section (shown before login) -->
+                    <div class="login-section" id="loginSection">
+                        <div class="login-icon">🔐</div>
+                        <div>
+                            <div class="login-title">Discord 계정 인증이 필요합니다</div>
+                        </div>
+                        <p class="login-desc">
+                            신고자 확인을 위해 Discord 로그인이 필요합니다.<br>
+                            로그인 정보는 신고자 ID 확인 및 채널 접근 권한 부여에만 사용됩니다.
+                        </p>
+                        <a href="https://discord.com/oauth2/authorize?client_id=1395960857250365512&response_type=token&redirect_uri=https%3A%2F%2Fblacklist.teamlight.pe.kr&scope=identify"
+                           class="btn-discord" id="loginBtn">
+                            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                                <path d="M20.317 4.492c-1.53-.69-3.17-1.2-4.885-1.49a.075.075 0 0 0-.079.036c-.21.369-.444.85-.608 1.23a18.566 18.566 0 0 0-5.487 0 12.36 12.36 0 0 0-.617-1.23A.077.077 0 0 0 8.562 3c-1.714.29-3.354.8-4.885 1.491a.07.07 0 0 0-.032.027C.533 9.093-.32 13.555.099 17.961a.08.08 0 0 0 .031.055 20.03 20.03 0 0 0 5.993 2.98.078.078 0 0 0 .084-.026c.462-.62.874-1.275 1.226-1.963.021-.04.001-.088-.041-.104a13.201 13.201 0 0 1-1.872-.878.075.075 0 0 1-.008-.125c.126-.093.252-.19.372-.287a.075.075 0 0 1 .078-.01c3.927 1.764 8.18 1.764 12.061 0a.075.075 0 0 1 .079.009c.12.098.245.195.372.288a.075.075 0 0 1-.006.125c-.598.344-1.22.635-1.873.877a.075.075 0 0 0-.041.105c.36.687.772 1.341 1.225 1.962a.077.077 0 0 0 .084.028 19.963 19.963 0 0 0 6.002-2.981.076.076 0 0 0 .032-.054c.5-5.094-.838-9.52-3.549-13.442a.06.06 0 0 0-.031-.028z"/>
+                            </svg>
+                            Discord로 로그인
+                        </a>
+                        <p style="font-size:12px;color:var(--fg-soft);">요청 권한: 계정 ID 및 닉네임 확인 (identify)</p>
+                    </div>
+
+                    <!-- Form Section (shown after login) -->
+                    <div id="formSection" style="display:none;">
+
+                        <!-- User Badge -->
+                        <div class="user-badge" id="userBadge">
+                            <div class="user-avatar-placeholder" id="userAvatarPlaceholder">?</div>
+                            <img class="user-avatar" id="userAvatarImg" src="" alt="avatar" style="display:none;" onerror="this.style.display='none';document.getElementById('userAvatarPlaceholder').style.display='flex';">
+                            <div class="user-info">
+                                <div class="user-name" id="userNameDisplay">—</div>
+                                <div class="user-id" id="userIdDisplay">ID: —</div>
+                            </div>
+                            <span class="user-badge-tag">✓ 로그인됨</span>
+                        </div>
+
+                        <!-- Report Form -->
+                        <form class="report-form visible" id="reportForm" novalidate>
+
+                            <!-- Reported User ID -->
+                            <div class="form-group">
+                                <label class="form-label" for="reportedUserId">
+                                    신고할 유저 ID
+                                    <span class="required">필수</span>
+                                    <a class="help-link"
+                                       href="https://support.discord.com/hc/ko/articles/206346498-%EC%82%AC%EC%9A%A9%EC%9E%90-%EC%84%9C%EB%B2%84-%EB%A9%94%EC%8B%9C%EC%A7%80-ID%EB%8A%94-%EC%96%B4%EB%94%94%EC%84%9C-%ED%99%95%EC%9D%B8%ED%95%98%EB%82%98%EC%9A%94"
+                                       target="_blank" rel="noopener noreferrer" aria-label="유저 ID 확인 방법">
+                                        ID 확인 방법 ↗
+                                    </a>
+                                </label>
+                                <input
+                                    class="form-input" type="text" id="reportedUserId" name="reportedUserId"
+                                    placeholder="예: 123456789012345678"
+                                    pattern="\d{17,20}" maxlength="20"
+                                    autocomplete="off" inputmode="numeric">
+                                <span class="form-hint">숫자로만 이루어진 Discord 유저 ID를 입력하세요.</span>
+                                <span class="form-error" id="err-reportedUserId">올바른 Discord 유저 ID를 입력해주세요. (17~20자리 숫자)</span>
+                            </div>
+
+                            <!-- Offender Nickname -->
+                            <div class="form-group">
+                                <label class="form-label" for="offenderNickname">
+                                    가해자 닉네임
+                                    <span class="required">필수</span>
+                                </label>
+                                <input
+                                    class="form-input" type="text" id="offenderNickname" name="offenderNickname"
+                                    placeholder="예: sfop24i_131 또는 표시 이름"
+                                    maxlength="100">
+                                <span class="form-hint">신고 대상의 디스코드 닉네임 또는 표시 이름을 입력하세요.</span>
+                                <span class="form-error" id="err-offenderNickname">닉네임을 입력해주세요.</span>
+                            </div>
+
+                            <!-- Report Reason -->
+                            <div class="form-group">
+                                <label class="form-label" for="reportReason">
+                                    신고 사유
+                                    <span class="required">필수</span>
+                                </label>
+                                <select class="form-input" id="reportReason" name="reportReason">
+                                    <option value="" disabled selected>신고 사유를 선택해주세요</option>
+                                    <option value="서버 테러 / 레이드 / 채널 테러">서버 테러 / 레이드 / 채널 테러</option>
+                                    <option value="도배 및 스팸 (메시지 / 이미지 / 음성)">도배 및 스팸 (메시지 / 이미지 / 음성)</option>
+                                    <option value="전체 멘션(@everyone / @here) 무단 남용">전체 멘션(@everyone / @here) 무단 남용</option>
+                                    <option value="개인정보 유출 (신상 털기 / Doxxing)">개인정보 유출 (신상 털기 / Doxxing)</option>
+                                    <option value="사기, 금전 갈취 및 피싱 링크 유포">사기, 금전 갈취 및 피싱 링크 유포</option>
+                                    <option value="협박, 스토킹 및 심각한 언어폭력 / 괴롭힘">협박, 스토킹 및 심각한 언어폭력 / 괴롭힘</option>
+                                    <option value="불법 콘텐츠 및 음란물 유포 / 성희롱">불법 콘텐츠 및 음란물 유포 / 성희롱</option>
+                                    <option value="악성코드 / 바이러스 / 해킹 툴 유포">악성코드 / 바이러스 / 해킹 툴 유포</option>
+                                    <option value="토큰 탈취 / 계정 도용 / 봇 무단 악용">토큰 탈취 / 계정 도용 / 봇 무단 악용</option>
+                                    <option value="서버 관리자 / 팀라이트 사칭">서버 관리자 / 팀라이트 사칭</option>
+                                    <option value="유료 자산 / 봇 소스 무단 복제 및 재판매">유료 자산 / 봇 소스 무단 복제 및 재판매</option>
+                                    <option value="서버 운영 방해 및 허위 사실 유포">서버 운영 방해 및 허위 사실 유포</option>
+                                    <option value="기타 (상세 설명에 구체적 작성)">기타 (상세 설명에 구체적 작성)</option>
+                                </select>
+                                <span class="form-error" id="err-reportReason">신고 사유를 선택해주세요.</span>
+                            </div>
+
+                            <!-- Detail Description -->
+                            <div class="form-group">
+                                <label class="form-label" for="description">
+                                    상세 설명
+                                    <span class="required">필수</span>
+                                </label>
+                                <textarea
+                                    class="form-textarea" id="description" name="description"
+                                    placeholder="신고 내용을 상세하게 작성해주세요. 언제, 어디서, 어떤 일이 있었는지 구체적으로 작성할수록 처리에 도움이 됩니다."
+                                    maxlength="3000" rows="6"></textarea>
+                                <div class="char-counter" id="charCounter">0 / 3000</div>
+                                <span class="form-error" id="err-description">상세 설명을 10자 이상 입력해주세요.</span>
+                            </div>
+
+                            <!-- Evidence Images -->
+                            <div class="form-group">
+                                <label class="form-label">
+                                    증거 자료
+                                    <span style="font-size:11px;font-weight:600;color:var(--fg-soft);margin-left:2px;">(선택)</span>
+                                </label>
+                                <div class="upload-zone" id="uploadZone">
+                                    <input type="file" id="evidenceFiles" name="evidenceFiles"
+                                           accept="image/*" multiple>
+                                    <div class="upload-icon">🖼️</div>
+                                    <div class="upload-title">이미지를 클릭하거나 드래그하여 업로드</div>
+                                    <div class="upload-desc">PNG, JPG, GIF, WEBP 등 이미지 파일</div>
+                                    <div class="upload-limit">최대 10개 · 파일당 최대 30MB</div>
+                                </div>
+                                <div class="image-preview-grid" id="imagePreviewGrid"></div>
+                                <span class="form-error" id="err-files"></span>
+                            </div>
+
+                            <hr class="form-divider">
+
+                            <!-- Agreements -->
+                            <div class="agree-section">
+                                <label class="agree-item">
+                                    <input type="checkbox" class="agree-checkbox" id="agreeTerms" name="agreeTerms">
+                                    <span class="agree-text">
+                                        <a href="https://teamlight.pe.kr/terms.html" target="_blank" rel="noopener noreferrer">이용약관</a>을 읽고 동의합니다.
+                                    </span>
+                                </label>
+                                <label class="agree-item">
+                                    <input type="checkbox" class="agree-checkbox" id="agreePrivacy" name="agreePrivacy">
+                                    <span class="agree-text">
+                                        <a href="https://teamlight.pe.kr/privacy.html" target="_blank" rel="noopener noreferrer">개인정보 처리방침</a>을 읽고 동의합니다.
+                                    </span>
+                                </label>
+                            </div>
+
+                            <!-- Submit -->
+                            <div class="submit-section">
+                                <button type="submit" class="btn-submit" id="submitBtn" disabled>
+                                    <span class="spinner" aria-hidden="true"></span>
+                                    <span class="btn-text">🚨 신고서 제출하기</span>
+                                </button>
+                            </div>
+                        </form>
+
+                        <!-- Blacklist page mention -->
+                        <div class="bl-mention" style="margin-top: 20px;">
+                            <span class="bl-mention-icon">📋</span>
+                            <span>블랙리스트 채점 기준과 처리 절차는 <a href="https://teamlight.pe.kr/blacklist.html" target="_blank" rel="noopener noreferrer">블랙리스트 안내 페이지</a>에서 확인하세요.</span>
+                        </div>
+                    </div>
+
+                    <!-- Success State -->
+                    <div class="success-state" id="successState">
+                        <div class="success-icon">✅</div>
+                        <div class="success-title">신고서가 제출되었습니다</div>
+                        <p class="success-desc">접수된 신고는 팀원이 검토 후 처리합니다. 신고자 전용 채널이 서포트 서버에 생성되었습니다.</p>
+                        <div class="success-ticket" id="ticketInfo"></div>
+                        <a href="https://teamlight.pe.kr/blacklist.html" style="color:var(--accent-2);font-size:13px;font-weight:700;margin-top:8px;">블랙리스트 안내 보기 →</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <footer class="page-footer">
+                <p>© 2026 Team Light. All rights reserved. &nbsp;·&nbsp;
+                    <a href="https://teamlight.pe.kr/terms.html">이용약관</a> &nbsp;·&nbsp;
+                    <a href="https://teamlight.pe.kr/privacy.html">개인정보 처리방침</a>
+                </p>
+            </footer>
+        </main>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast" role="alert" aria-live="polite"></div>
+
+    <script>
+    (() => {
+        'use strict';
+
+        // ── Constants ──
+        const CLIENT_ID = '1395960857250365512';
+        const REDIRECT_URI = 'https://blacklist.teamlight.pe.kr';
+        // API 요청은 Netlify Function 프록시(/.netlify/functions/blacklist-report)로 전달됩니다.
+        // 프록시가 위어드호스트 서버(107.189.12.161:3001)의 서린 봇 API로 포워딩합니다.
+        const API_BASE = ''; // 동일 오리진 → netlify.toml 리다이렉트 규칙으로 처리
+
+        const MAX_FILES = 10;
+        const MAX_FILE_SIZE = 30 * 1024 * 1024; // 30MB
+
+        // ── State ──
+        let currentUser = null;
+        let selectedFiles = [];
+
+        // ── Elements ──
+        const loginSection = document.getElementById('loginSection');
+        const formSection = document.getElementById('formSection');
+        const userBadge = document.getElementById('userBadge');
+        const userNameDisplay = document.getElementById('userNameDisplay');
+        const userIdDisplay = document.getElementById('userIdDisplay');
+        const userAvatarImg = document.getElementById('userAvatarImg');
+        const userAvatarPlaceholder = document.getElementById('userAvatarPlaceholder');
+        const reportForm = document.getElementById('reportForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const description = document.getElementById('description');
+        const charCounter = document.getElementById('charCounter');
+        const uploadZone = document.getElementById('uploadZone');
+        const evidenceFiles = document.getElementById('evidenceFiles');
+        const imagePreviewGrid = document.getElementById('imagePreviewGrid');
+        const agreeTerms = document.getElementById('agreeTerms');
+        const agreePrivacy = document.getElementById('agreePrivacy');
+        const successState = document.getElementById('successState');
+        const ticketInfo = document.getElementById('ticketInfo');
+        const toast = document.getElementById('toast');
+
+        // ── Toast ──
+        let toastTimer = null;
+        function showToast(msg, type = '') {
+            toast.textContent = msg;
+            toast.className = 'toast show' + (type ? ' ' + type : '');
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => toast.classList.remove('show'), 4000);
+        }
+
+        // ── OAuth2 Implicit Grant (response_type=token) ──
+        // access_token이 URL fragment(#)로 직접 전달 → client_secret 불필요
+        function handleOAuth() {
+            const hash = new URLSearchParams(window.location.hash.slice(1));
+            const params = new URLSearchParams(window.location.search);
+
+            const accessToken = hash.get('access_token');
+            const error = hash.get('error') || params.get('error');
+
+            if (error) {
+                showToast('Discord 로그인이 취소되었습니다.', 'error');
+                window.history.replaceState({}, document.title, window.location.pathname);
+                return;
+            }
+
+            if (accessToken) {
+                // fragment 제거 후 유저 정보 조회
+                window.history.replaceState({}, document.title, window.location.pathname);
+                fetchUserWithToken(accessToken);
+                return;
+            }
+
+            // Check stored session
+            const stored = sessionStorage.getItem('tl_user');
+            if (stored) {
+                try {
+                    currentUser = JSON.parse(stored);
+                    showFormSection();
+                } catch {
+                    sessionStorage.removeItem('tl_user');
+                }
+            }
+        }
+
+        async function fetchUserWithToken(accessToken) {
+            loginSection.innerHTML = `
+                <div class="login-icon">⏳</div>
+                <div class="login-title">로그인 처리 중...</div>
+                <p class="login-desc">잠시만 기다려주세요.</p>
+            `;
+            loginSection.style.display = 'flex';
+
+            try {
+                const userRes = await fetch('https://discord.com/api/v10/users/@me', {
+                    headers: { Authorization: `Bearer ${accessToken}` }
+                });
+
+                if (!userRes.ok) throw new Error('유저 정보 조회 실패');
+
+                const user = await userRes.json();
+                currentUser = user;
+                sessionStorage.setItem('tl_user', JSON.stringify(currentUser));
+                showFormSection();
+            } catch (err) {
+                console.error(err);
+                showToast('로그인 처리 중 오류가 발생했습니다. 다시 시도해주세요.', 'error');
+                loginSection.innerHTML = `
+                    <div class="login-icon">❌</div>
+                    <div class="login-title">로그인 실패</div>
+                    <p class="login-desc">오류가 발생했습니다. 다시 시도해주세요.</p>
+                    <a href="https://discord.com/oauth2/authorize?client_id=${CLIENT_ID}&response_type=token&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&scope=identify"
+                       class="btn-discord">
+                        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="width:20px;height:20px;">
+                            <path d="M20.317 4.492c-1.53-.69-3.17-1.2-4.885-1.49a.075.075 0 0 0-.079.036c-.21.369-.444.85-.608 1.23a18.566 18.566 0 0 0-5.487 0 12.36 12.36 0 0 0-.617-1.23A.077.077 0 0 0 8.562 3c-1.714.29-3.354.8-4.885 1.491a.07.07 0 0 0-.032.027C.533 9.093-.32 13.555.099 17.961a.08.08 0 0 0 .031.055 20.03 20.03 0 0 0 5.993 2.98.078.078 0 0 0 .084-.026c.462-.62.874-1.275 1.226-1.963.021-.04.001-.088-.041-.104a13.201 13.201 0 0 1-1.872-.878.075.075 0 0 1-.008-.125c.126-.093.252-.19.372-.287a.075.075 0 0 1 .078-.01c3.927 1.764 8.18 1.764 12.061 0a.075.075 0 0 1 .079.009c.12.098.245.195.372.288a.075.075 0 0 1-.006.125c-.598.344-1.22.635-1.873.877a.075.075 0 0 0-.041.105c.36.687.772 1.341 1.225 1.962a.077.077 0 0 0 .084.028 19.963 19.963 0 0 0 6.002-2.981.076.076 0 0 0 .032-.054c.5-5.094-.838-9.52-3.549-13.442a.06.06 0 0 0-.031-.028z"/>
+                        </svg>
+                        다시 로그인
+                    </a>
+                `;
+            }
+        }
+
+        function showFormSection() {
+            if (!currentUser) return;
+            loginSection.style.display = 'none';
+            formSection.style.display = 'block';
+            userBadge.classList.add('visible');
+
+            userNameDisplay.textContent = currentUser.global_name || currentUser.username;
+            userIdDisplay.textContent = 'ID: ' + currentUser.id;
+            userAvatarPlaceholder.textContent = (currentUser.global_name || currentUser.username || '?')[0].toUpperCase();
+
+            if (currentUser.avatar) {
+                const avatarUrl = `https://cdn.discordapp.com/avatars/${currentUser.id}/${currentUser.avatar}.png?size=64`;
+                userAvatarImg.src = avatarUrl;
+                userAvatarImg.style.display = 'block';
+                userAvatarPlaceholder.style.display = 'none';
+            }
+        }
+
+        // ── Char counter ──
+        description.addEventListener('input', () => {
+            const len = description.value.length;
+            charCounter.textContent = `${len.toLocaleString()} / 3,000`;
+            charCounter.className = 'char-counter' + (len >= 2800 ? ' danger' : len >= 2400 ? ' warn' : '');
+        });
+
+        // ── Agreement checkboxes ──
+        function updateSubmitState() {
+            submitBtn.disabled = !(agreeTerms.checked && agreePrivacy.checked);
+        }
+        agreeTerms.addEventListener('change', updateSubmitState);
+        agreePrivacy.addEventListener('change', updateSubmitState);
+
+        // ── File Upload ──
+        evidenceFiles.addEventListener('change', (e) => handleFiles(e.target.files));
+
+        uploadZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadZone.classList.add('drag-over');
+        });
+        uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('drag-over'));
+        uploadZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadZone.classList.remove('drag-over');
+            handleFiles(e.dataTransfer.files);
+        });
+
+        function handleFiles(newFiles) {
+            const errEl = document.getElementById('err-files');
+            for (const f of newFiles) {
+                if (selectedFiles.length >= MAX_FILES) {
+                    showToast(`최대 ${MAX_FILES}개의 이미지만 첨부할 수 있습니다.`, 'error');
+                    break;
+                }
+                if (f.size > MAX_FILE_SIZE) {
+                    showToast(`"${f.name}"은 30MB를 초과합니다.`, 'error');
+                    continue;
+                }
+                if (!f.type.startsWith('image/')) {
+                    showToast(`"${f.name}"은 이미지 파일이 아닙니다.`, 'error');
+                    continue;
+                }
+                if (selectedFiles.some(sf => sf.name === f.name && sf.size === f.size)) continue;
+                selectedFiles.push(f);
+            }
+            renderPreviews();
+            evidenceFiles.value = '';
+        }
+
+        function renderPreviews() {
+            imagePreviewGrid.innerHTML = '';
+            for (let i = 0; i < selectedFiles.length; i++) {
+                const f = selectedFiles[i];
+                const item = document.createElement('div');
+                item.className = 'preview-item';
+                const url = URL.createObjectURL(f);
+                item.innerHTML = `
+                    <img src="${url}" alt="${f.name}" loading="lazy">
+                    <div class="preview-name">${f.name}</div>
+                    <button type="button" class="preview-remove" title="제거" data-index="${i}">✕</button>
+                `;
+                imagePreviewGrid.appendChild(item);
+            }
+            imagePreviewGrid.querySelectorAll('.preview-remove').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    selectedFiles.splice(Number(btn.dataset.index), 1);
+                    renderPreviews();
+                });
+            });
+        }
+
+        // ── Validation ──
+        function validateField(id, condition, errId) {
+            const input = document.getElementById(id);
+            const err = document.getElementById(errId);
+            if (!condition) {
+                input.classList.add('error');
+                err.classList.add('visible');
+                return false;
+            }
+            input.classList.remove('error');
+            err.classList.remove('visible');
+            return true;
+        }
+
+        function validate() {
+            let ok = true;
+            const uid = document.getElementById('reportedUserId').value.trim();
+            ok = validateField('reportedUserId', /^\d{17,20}$/.test(uid), 'err-reportedUserId') && ok;
+            ok = validateField('offenderNickname', document.getElementById('offenderNickname').value.trim().length > 0, 'err-offenderNickname') && ok;
+            ok = validateField('reportReason', document.getElementById('reportReason').value !== '', 'err-reportReason') && ok;
+            ok = validateField('description', description.value.trim().length >= 10, 'err-description') && ok;
+            return ok;
+        }
+
+        // ── Base64 파일 변환 헬퍼 ──
+        function readFileAsBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload  = () => resolve(reader.result.split(',')[1]);
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // ── Form Submit ──
+        reportForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!validate()) {
+                showToast('입력 내용을 확인해주세요.', 'error');
+                return;
+            }
+
+            submitBtn.classList.add('loading');
+            submitBtn.disabled = true;
+
+            // 파일을 base64로 변환 (Netlify Function 페이로드 한도: ~4MB)
+            const MAX_TOTAL_BYTES = 4 * 1024 * 1024;
+            const filesPayload = [];
+            let totalBytes = 0;
+            let skipped = 0;
+            for (const f of selectedFiles) {
+                if (totalBytes + f.size > MAX_TOTAL_BYTES) { skipped++; continue; }
+                const b64 = await readFileAsBase64(f);
+                filesPayload.push({ name: f.name, type: f.type, data: b64 });
+                totalBytes += f.size;
+            }
+            if (skipped > 0) showToast(`파일 크기 초과로 ${skipped}개 제외됨 (총 4MB 한도)`, 'warn');
+
+            const payload = {
+                reporterId      : currentUser.id,
+                reporterName    : currentUser.global_name || currentUser.username,
+                reportedUserId  : document.getElementById('reportedUserId').value.trim(),
+                offenderNickname: document.getElementById('offenderNickname').value.trim(),
+                reportReason    : document.getElementById('reportReason').value,
+                description     : description.value.trim(),
+                files           : filesPayload,
+            };
+
+            try {
+                const res = await fetch(`${API_BASE}/api/blacklist-report`, {
+                    method : 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body   : JSON.stringify(payload)
+                });
+
+                let data;
+                try {
+                    data = await res.json();
+                } catch {
+                    throw new Error('서버와 통신할 수 없습니다.');
+                }
+
+                if (!res.ok) {
+                    throw new Error(data.message || '제출 중 오류가 발생했습니다.');
+                }
+
+                // 8. 성공 화면 표시
+                reportForm.style.display = 'none';
+                userBadge.classList.remove('visible');
+                document.querySelector('.bl-mention').style.display = 'none';
+                successState.classList.add('visible');
+                ticketInfo.textContent = `🎫 티켓 번호: ${data.ticketId}`;
+                sessionStorage.removeItem('tl_user');
+
+            } catch (err) {
+                console.error('신고 제출 에러:', err);
+                const msg = err && err.message ? err.message : '제출 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.';
+                showToast(msg, 'error');
+                submitBtn.classList.remove('loading');
+                submitBtn.disabled = !(agreeTerms.checked && agreePrivacy.checked);
+            }
+        });
+
+        // ── Real-time validation ──
+        ['reportedUserId', 'offenderNickname', 'reportReason', 'description'].forEach(id => {
+            const el = document.getElementById(id);
+            el.addEventListener('blur', () => {
+                const errId = 'err-' + id;
+                if (id === 'reportedUserId') validateField(id, /^\d{17,20}$/.test(el.value.trim()), errId);
+                else if (id === 'description') validateField(id, el.value.trim().length >= 10, errId);
+                else validateField(id, el.value.trim() !== '' && el.value !== '', errId);
+            });
+        });
+
+        // ── Init ──
+        handleOAuth();
+    })();
+    </script>
+</body>
+</html>

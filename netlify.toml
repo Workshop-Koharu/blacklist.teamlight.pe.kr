@@ -1,0 +1,22 @@
+[build]
+  publish = "."
+  functions = "netlify/functions"
+
+# /api/blacklist-report → Netlify Function 프록시로 라우팅
+[[redirects]]
+  from = "/api/blacklist-report"
+  to = "/.netlify/functions/blacklist-report"
+  status = 200
+
+# SPA fallback (함수 경로보다 후순위로 배치)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
