@@ -7,11 +7,7 @@
   },
   "rewrites": [
     {
-      "source": "/api/blacklist-report",
-      "destination": "/api/blacklist-report"
-    },
-    {
-      "source": "/((?!api/).*)",
+      "source": "/(.*)",
       "destination": "/index.html"
     }
   ],
